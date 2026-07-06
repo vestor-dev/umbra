@@ -9,6 +9,7 @@ import { TokenIcon } from "@/components/token-icon";
 import { PairActions } from "@/components/pair-actions";
 import { PairSwitcher } from "@/components/pair-switcher";
 import { PendingUnwraps } from "@/components/pending-unwraps";
+import { RefreshButton } from "@/components/refresh-button";
 import { InfoTip } from "@/components/ui/tooltip";
 import { getServerClient } from "@/lib/clients";
 import { toUiPair } from "@/lib/pair";
@@ -149,13 +150,16 @@ export default async function PairPage({
           <ArrowLeft className="h-4 w-4" />
           All pairs
         </Link>
-        {switcherPairs.length > 0 && (
-          <PairSwitcher
-            pairs={switcherPairs}
-            current={pair.wrapper}
-            currentSymbol={pair.wrapperMeta.symbol}
-          />
-        )}
+        <div className="flex items-center gap-2.5">
+          <RefreshButton />
+          {switcherPairs.length > 0 && (
+            <PairSwitcher
+              pairs={switcherPairs}
+              current={pair.wrapper}
+              currentSymbol={pair.wrapperMeta.symbol}
+            />
+          )}
+        </div>
       </div>
 
       <div className="mt-6">
