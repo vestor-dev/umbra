@@ -1,13 +1,32 @@
 "use client";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { useState, type ReactNode } from "react";
-import { PrivyProvider } from "@privy-io/react-auth";
-import { WagmiProvider } from "@privy-io/wagmi";
+import { useEffect, useState, type ReactNode } from "react";
+import { PrivyProvider, useWallets } from "@privy-io/react-auth";
+import { WagmiProvider, useSetActiveWallet } from "@privy-io/wagmi";
 import { mainnet, sepolia } from "wagmi/chains";
 import { wagmiConfig } from "@/lib/wagmi";
 
 const PRIVY_APP_ID = process.env.NEXT_PUBLIC_PRIVY_APP_ID ?? "";
+
+/**
+ * Bridges Privy's connected wallet into wagmi. Without this, Privy can be
+ * `authenticated` while wagmi's `useAccount()` still reports disconnected — so
+ * every action gated on wagmi (wrap/unwrap/reveal) stays locked. We promote the
+ * first external (non-embedded) wallet to wagmi's active wallet.
+ */
+function WalletBridge({ children }: { children: ReactNode }) {
+  const { wallets } = useWallets();
+  const { setActiveWallet } = useSetActiveWallet();
+
+  useEffect(() => {
+    if (!wallets.length) return;
+    const external = wallets.find((w) => w.walletClientType !== "privy") ?? wallets[0];
+    if (external) void setActiveWallet(external).catch(() => {});
+  }, [wallets, setActiveWallet]);
+
+  return <>{children}</>;
+}
 
 export function Providers({ children }: { children: ReactNode }) {
   const [queryClient] = useState(
@@ -35,7 +54,9 @@ export function Providers({ children }: { children: ReactNode }) {
       }}
     >
       <QueryClientProvider client={queryClient}>
-        <WagmiProvider config={wagmiConfig}>{children}</WagmiProvider>
+        <WagmiProvider config={wagmiConfig}>
+          <WalletBridge>{children}</WalletBridge>
+        </WagmiProvider>
       </QueryClientProvider>
     </PrivyProvider>
   );
