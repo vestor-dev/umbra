@@ -1,0 +1,27 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Umbra">
+  <defs>
+    <radialGradient id="umbraDisc" cx="42%" cy="38%" r="72%">
+      <stop offset="0%" stop-color="#232436"/>
+      <stop offset="62%" stop-color="#0d0e16"/>
+      <stop offset="100%" stop-color="#0b0c13"/>
+    </radialGradient>
+    <linearGradient id="umbraCrescent" x1="14" y1="10" x2="52" y2="54" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#7d74ff"/>
+      <stop offset="55%" stop-color="#4b43cf"/>
+      <stop offset="100%" stop-color="#2f6bf0"/>
+    </linearGradient>
+    <clipPath id="umbraClip">
+      <circle cx="32" cy="32" r="22"/>
+    </clipPath>
+  </defs>
+  <!-- penumbra -->
+  <circle cx="32" cy="32" r="27" fill="#4b43cf" opacity="0.14"/>
+  <!-- the umbra: disc in shadow -->
+  <circle cx="32" cy="32" r="22" fill="url(#umbraDisc)"/>
+  <!-- crescent of light escaping the eclipse -->
+  <g clip-path="url(#umbraClip)">
+    <circle cx="41.5" cy="30" r="22" fill="url(#umbraCrescent)"/>
+    <circle cx="32" cy="32" r="22" fill="#0c0d15"/>
+  </g>
+  <circle cx="32" cy="32" r="22" fill="none" stroke="#ffffff" stroke-opacity="0.06"/>
+</svg>

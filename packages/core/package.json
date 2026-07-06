@@ -1,0 +1,52 @@
+{
+  "name": "@umbra/core",
+  "version": "0.1.1",
+  "description": "Framework-agnostic SDK for the Zama Confidential Wrappers Registry (ERC-7984): live registry reads, pair verification, ABIs, and canonical addresses.",
+  "license": "MIT",
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": ["dist"],
+  "sideEffects": false,
+  "keywords": [
+    "erc7984",
+    "erc-7984",
+    "confidential",
+    "fhevm",
+    "zama",
+    "wrappers-registry",
+    "viem",
+    "web3"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NueloSE/umbra.git",
+    "directory": "packages/core"
+  },
+  "homepage": "https://github.com/NueloSE/umbra/tree/main/packages/core#readme",
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json && node scripts/add-dist-extensions.mjs",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "pnpm run build"
+  },
+  "dependencies": {
+    "viem": "^2.53.1"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.3"
+  },
+  "publishConfig": {
+    "access": "public",
+    "main": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "import": "./dist/index.js"
+      }
+    }
+  }
+}

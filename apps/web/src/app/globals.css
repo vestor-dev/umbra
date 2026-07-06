@@ -1,0 +1,312 @@
+@import "tailwindcss";
+
+/* ============================================================================
+   Umbra design tokens — "Eclipse"
+   ----------------------------------------------------------------------------
+   A confidential-token workstation for the Zama Wrappers Registry.
+   The concept: value lives in shadow (the *umbra*) and is revealed by light
+   (decryption). A cool paper canvas + deep ink, a single twilight-iris accent,
+   an editorial serif display face, and a signature penumbral glow.
+
+   Tailwind v4 (@theme) generates the utilities: bg-canvas, text-accent,
+   border-hairline, font-display, font-mono, …
+   ----------------------------------------------------------------------------
+   NOTE ON THE ZINC RAMP: the app was authored dark-first (text-zinc-100 = the
+   brightest text). We invert the ramp here — low numbers become ink, high
+   numbers become paper — so every existing utility flips to a correct
+   light-mode value in one place, no per-component edits.
+============================================================================ */
+@theme {
+  /* — Surfaces (cool paper) — */
+  --color-canvas: #f3f4f9;
+  --color-surface: #ffffff;
+  --color-surface-2: #eceef6;
+  --color-elevated: #ffffff;
+
+  /* — Hairline borders (ink at low alpha) — */
+  --color-hairline: rgba(21, 22, 34, 0.09);
+  --color-hairline-strong: rgba(21, 22, 34, 0.16);
+
+  /* — Ink (semantic text, for new components) — */
+  --color-ink: #14151f;
+  --color-ink-soft: #3a3d4d;
+  --color-muted: #5c6072;
+  --color-faint: #838799;
+
+  /* — Accent — twilight iris (the light breaking the shadow) — */
+  --color-accent: #4b43cf;
+  --color-accent-hover: #5a51e6;
+  --color-accent-fg: #ffffff;
+  --color-accent-soft: rgba(75, 67, 207, 0.1);
+  --color-accent-ring: rgba(75, 67, 207, 0.42);
+
+  /* Penumbra — layered cool glows used behind the hero + eclipse mark */
+  --color-glow-iris: rgba(99, 91, 235, 0.22);
+  --color-glow-blue: rgba(56, 120, 246, 0.14);
+
+  /* — Semantic states (tuned for contrast on a light canvas) — */
+  --color-success: #0f9d6b;
+  --color-success-soft: rgba(15, 157, 107, 0.12);
+  --color-warn: #b45309;
+  --color-warn-soft: rgba(180, 83, 9, 0.12);
+  --color-danger: #dc2626;
+  --color-danger-soft: rgba(220, 38, 38, 0.1);
+  --color-info: #2563eb;
+  --color-info-soft: rgba(37, 99, 235, 0.12);
+
+  /* — Inverted zinc ramp (ink → paper) — */
+  --color-zinc-50: #0a0b12;
+  --color-zinc-100: #14151f; /* primary ink text */
+  --color-zinc-200: #1f2130;
+  --color-zinc-300: #2c2f40; /* strong secondary */
+  --color-zinc-400: #4a4e60; /* secondary / muted */
+  --color-zinc-500: #616576; /* labels / muted */
+  --color-zinc-600: #7e8294; /* faint / placeholder */
+  --color-zinc-700: #a6aab8; /* subtle */
+  --color-zinc-800: #dcdfe8; /* hairline surfaces / borders */
+  --color-zinc-900: #eaecf3; /* light recessed surface */
+  --color-zinc-950: #f2f4f9; /* lightest surface */
+  --color-neutral-100: #14151f;
+  --color-neutral-400: #4a4e60;
+  --color-neutral-500: #616576;
+  --color-neutral-800: #dcdfe8;
+  --color-neutral-900: #eaecf3;
+
+  /* — Type — editorial serif display + humanist grotesque + mono data — */
+  --font-display: var(--font-fraunces), "Iowan Old Style", Georgia, serif;
+  --font-sans: var(--font-hanken), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jbmono), ui-monospace, "SF Mono", "Menlo", monospace;
+
+  /* — Motion — */
+  --ease-out-soft: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-soft: cubic-bezier(0.4, 0, 1, 1);
+}
+
+/* ----------------------------------------------------------------------------
+   Base
+---------------------------------------------------------------------------- */
+html,
+body {
+  max-width: 100vw;
+  /* `clip` (not `hidden`) stops horizontal scroll without breaking sticky. */
+  overflow-x: clip;
+}
+
+body {
+  background: var(--color-canvas);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: "cv05" 1, "ss03" 1;
+}
+
+/* Editorial display face: tighten tracking, optical weight */
+.font-display {
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
+  font-optical-sizing: auto;
+}
+
+/* Tabular numerals everywhere amounts/addresses live */
+.font-mono {
+  font-feature-settings: "tnum" 1, "zero" 1;
+  font-variant-numeric: tabular-nums slashed-zero;
+}
+
+/* Iris text selection */
+::selection {
+  background: rgba(75, 67, 207, 0.16);
+  color: var(--color-ink);
+}
+
+/* Restrained custom scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(21, 22, 34, 0.18) transparent;
+}
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+*::-webkit-scrollbar-thumb {
+  background: rgba(21, 22, 34, 0.16);
+  border-radius: 9999px;
+  border: 3px solid transparent;
+  background-clip: content-box;
+}
+*::-webkit-scrollbar-thumb:hover {
+  background: rgba(21, 22, 34, 0.28);
+  background-clip: content-box;
+}
+
+/* Consistent accent focus ring for keyboard users */
+:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 2px var(--color-canvas),
+    0 0 0 4px var(--color-accent-ring);
+  border-radius: inherit;
+}
+
+/* ----------------------------------------------------------------------------
+   Signature surfaces
+---------------------------------------------------------------------------- */
+
+/* Penumbra — a soft twilight glow bleeding from the top of the hero.
+   Two offset radials (iris + cool blue) read as light escaping an eclipse. */
+.penumbra::before {
+  content: "";
+  position: absolute;
+  inset: -30% -10% auto -10%;
+  height: 720px;
+  z-index: -1;
+  background:
+    radial-gradient(46% 60% at 32% 0%, var(--color-glow-iris), transparent 68%),
+    radial-gradient(40% 52% at 72% 8%, var(--color-glow-blue), transparent 70%);
+  pointer-events: none;
+}
+
+/* Fine engraved grid for large empty surfaces (ink at very low alpha) */
+.bg-dotgrid {
+  background-image: radial-gradient(rgba(21, 22, 34, 0.05) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+
+/* Editorial hairline rule with a centered fade */
+.rule-fade {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--color-hairline-strong),
+    transparent
+  );
+}
+
+/* Encrypted value — blurred + redacted until revealed */
+.encrypted-blur {
+  filter: blur(7px);
+  user-select: none;
+  pointer-events: none;
+}
+
+/* Redacted ciphertext chip — a monospace shadow standing in for hidden value */
+.redacted {
+  position: relative;
+  color: transparent;
+  user-select: none;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      rgba(21, 22, 34, 0.5) 0 6px,
+      rgba(21, 22, 34, 0.28) 6px 11px
+    );
+  -webkit-background-clip: text;
+  background-clip: text;
+  border-radius: 3px;
+}
+
+/* The Eclipse mark — a disc in shadow ringed by a thin crescent of light */
+.eclipse {
+  position: relative;
+  border-radius: 9999px;
+  background: radial-gradient(circle at 50% 50%, #1b1c28 0%, #0c0d15 62%, #0c0d15 100%);
+  box-shadow:
+    inset -2px -2px 6px rgba(0, 0, 0, 0.6),
+    0 0 0 1px rgba(21, 22, 34, 0.12);
+}
+.eclipse::after {
+  content: "";
+  position: absolute;
+  inset: -18%;
+  border-radius: 9999px;
+  background: conic-gradient(
+    from 210deg,
+    transparent 0deg,
+    var(--color-glow-iris) 40deg,
+    var(--color-glow-blue) 80deg,
+    transparent 130deg
+  );
+  filter: blur(6px);
+  z-index: -1;
+}
+
+/* ----------------------------------------------------------------------------
+   Motion (respects reduced-motion)
+---------------------------------------------------------------------------- */
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+@keyframes fade-up {
+  0% {
+    opacity: 0;
+    transform: translateY(18px);
+    filter: blur(4px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+@keyframes drift {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-1deg);
+  }
+  50% {
+    transform: translateY(-14px) rotate(1deg);
+  }
+}
+@keyframes reveal-pop {
+  0% {
+    opacity: 0;
+    filter: blur(8px);
+    letter-spacing: 0.1em;
+  }
+  100% {
+    opacity: 1;
+    filter: blur(0);
+    letter-spacing: normal;
+  }
+}
+@keyframes eclipse-turn {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .animate-fade-up {
+    animation: fade-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+  .animate-drift {
+    animation: drift 8s ease-in-out infinite;
+  }
+  .animate-reveal {
+    animation: reveal-pop 0.45s var(--ease-out-soft) both;
+  }
+  .eclipse::after {
+    animation: eclipse-turn 22s linear infinite;
+  }
+  .shimmer {
+    position: relative;
+    overflow: hidden;
+  }
+  .shimmer::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    transform: translateX(-100%);
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(21, 22, 34, 0.06),
+      transparent
+    );
+    animation: shimmer 1.6s infinite;
+  }
+}
