@@ -1,91 +1,189 @@
 <div align="center">
 
-<img src="./apps/web/public/umbra-mark.svg" alt="Umbra" width="88" />
+<img src="./apps/web/public/umbra-mark.svg" alt="Umbra" width="76" />
 
 # Umbra
 
-**Confidential value, out of the shadows.**
+### Confidential value, out of the shadows.
 
-The registry and workstation for confidential tokens — browse every ERC‑20 ↔ ERC‑7984 pair in the [Zama Wrappers Registry](https://docs.zama.ai/protocol), then wrap, unwrap, send, and decrypt **any** confidential balance. Full read + write on Sepolia; read‑only browse on Ethereum.
+Wrap any ERC‑20 into an encrypted ERC‑7984 token, move it privately, and reveal
+your balance to no one but yourself — a full workstation for the
+[Zama Confidential Wrappers Registry](https://docs.zama.ai/protocol).
 
-🌐 **Live:** _add after deploy_ · 🎬 **Demo:** _add after recording_ · 🧵 **Thread:** _add after posting_
+<br/>
+
+[![Built for Zama Developer Program](https://img.shields.io/badge/Zama-Developer_Program-ffd200?style=flat-square)](https://www.zama.ai/)
+[![ERC-7984](https://img.shields.io/badge/token-ERC--7984-4b43cf?style=flat-square)](https://docs.zama.ai/protocol)
+[![Network](https://img.shields.io/badge/network-Sepolia_+_Ethereum-14875a?style=flat-square)](#-networks)
+[![License](https://img.shields.io/badge/license-MIT-0d0d10?style=flat-square)](./LICENSE)
+
+🌐 **Live demo:** _add after deploy_ · 🎬 **Video:** _add after recording_ · 🧵 **X thread:** _add after posting_
 
 </div>
 
 ---
 
-## What it is
+## 🌙 The 30‑second version
 
-The Zama Wrappers Registry is an on‑chain directory mapping standard ERC‑20 tokens to their confidential ERC‑7984 counterparts. It's powerful but raw — just contract calls. **Umbra turns it into a product**: a fast explorer over the live registry, the full confidential‑token lifecycle (faucet → wrap → reveal → send → unwrap), a universal decryptor for *any* ERC‑7984 token, a hybrid registry anyone can extend, and a reusable SDK + token list for other developers.
+Public tokens leak everything — anyone can see exactly what you hold and move.
+**Confidential tokens fix that.** Zama's FHE (fully homomorphic encryption) lets a
+token keep every balance and transfer *encrypted on‑chain*, while still being a
+real, composable ERC token.
 
-Built for the **Zama Developer Program — Bounty Track** (Confidential Wrapper Registry challenge).
+Umbra is the front door to that world:
 
-## Features
-
-| | Feature | Notes |
-|---|---|---|
-| 🔎 | **Live registry explorer** | Every pair read on‑chain via multicall, enriched with metadata, searchable, provenance‑badged. Sepolia + Ethereum. |
-| 🪙 | **Faucet** | Mint official Sepolia `cTokenMock` underlyings to test with. |
-| 📦 | **Wrap** | ERC‑20 → confidential ERC‑7984 (approve + wrap). |
-| 🔓 | **Unwrap** | Full async protocol: burn → public‑decrypt → finalize, driven entirely by the dApp. |
-| 💸 | **Confidential send** | Transfer an ERC‑7984 to anyone — the amount stays **encrypted end‑to‑end** (one tx, no decrypt). |
-| 👁️ | **Reveal balance** | EIP‑712 user‑decrypt of your confidential balance, with session caching. |
-| 🌐 | **Decrypt *any* ERC‑7984** | Paste any confidential token address — auto‑validates via ERC‑165 and decrypts. Not limited to the registry. |
-| ♻️ | **Pending‑unwrap recovery** | Detects unwraps burned but never finalized (e.g. a closed tab) and lets you finish them. Funds never get stuck. |
-| ➕ | **Hybrid registry + add‑a‑pair** | On‑chain registry is the source of truth; add extra pairs via the in‑app form or committed config. |
-| 🧩 | **Embeddable widget** | Drop a wrap/unwrap box into any site with one `<iframe>`. |
-| 🧱 | **Developer SDK + token list** | `@umbra/core` package and a [tokenlists.org](https://tokenlists.org)‑schema export at `/api/token-list`. |
-
-## Supported networks
-
-| Network | Chain ID | Mode | Registry |
-|---|---|---|---|
-| **Sepolia** | `11155111` | Full (read + write) | `0x2f0750Bbb0A246059d80e94c454586a7F27a128e` |
-| **Ethereum** | `1` | Read‑only browse | `0xeb5015fF021DB115aCe010f23F55C2591059bBA0` |
-
-All confidential operations (wrap/unwrap/decrypt) run on **Sepolia** via the Zama relayer. Mainnet is browse‑only.
-
-## How the registry is sourced (hybrid)
-
-Umbra sources pairs from **two layers**, with the chain always winning:
-
-1. **On‑chain registry (source of truth).** On every load the app reads the official Zama registry for the active network — the full pair set in one multicall — then enriches each pair with token metadata (`symbol`, `name`, `decimals`), an ERC‑165 `supportsInterface` check, the conversion rate, and a bidirectional‑link check. Cached server‑side for 60s.
-2. **Local config (additive).** A committed array, `committedCustomPairs` in [`apps/web/src/lib/custom-pairs.ts`](apps/web/src/lib/custom-pairs.ts), surfaces pairs not yet in the on‑chain registry — useful for local dev or a freshly deployed wrapper.
-
-Every pair is **provenance‑labeled**: **Official** (in the registry, valid, implements ERC‑7984), **Mock** (official testnet mock), **Custom** (added by you), or **Unverified** (in the registry but failed a check).
-
-## Architecture
-
-A pnpm + Turborepo monorepo:
+> **Wrap** your public USDC → get confidential cUSDC. **Send** it — observers see
+> *that* it moved, never *how much*. **Reveal** your own balance with a signature.
+> **Unwrap** back to USDC whenever you want.
 
 ```
-apps/web        Next.js 15 · React 19 · wagmi v3 · viem · Tailwind v4 · Zama relayer SDK
-packages/core   @umbra/core — framework‑agnostic read/verify SDK for the registry
+  ERC-20 (public)                         ERC-7984 (confidential)
+  ┌──────────────┐     wrap  ───────►     ┌──────────────────────┐
+  │   1,000 USDC │                        │  ●●●●● cUSDC          │  ← encrypted,
+  │  (everyone   │     ◄───────  unwrap   │  only you can reveal  │    even to explorers
+  │   can see)   │                        └──────────────────────┘
+  └──────────────┘
 ```
 
-- **Confidential crypto** runs entirely client‑side via `@zama-fhe/relayer-sdk` (WASM), loaded lazily and only when a user first reveals/decrypts. The app is served cross‑origin‑isolated (COOP/COEP) for the threaded WASM.
-- **Server components** read the registry through `@umbra/core` and hand a serializable `UiPair` to the client — no keys or RPC secrets ever reach the browser.
+Everyone knows the *total* supply. **What you personally hold stays yours.**
 
-## Getting started
+---
+
+## Contents
+
+- [What you can do](#-what-you-can-do)
+- [Run it in 60 seconds](#-run-it-in-60-seconds)
+- [How it works](#-how-it-works)
+- [Repo map](#-repo-map)
+- [Build on Umbra](#-build-on-umbra)
+- [Networks](#-networks)
+- [Configuration](#-configuration)
+- [Tech stack](#-tech-stack)
+- [FAQ](#-faq)
+
+---
+
+## ✨ What you can do
+
+Umbra is organised as a **workstation** — one sidebar, four rooms:
+
+| Room | Route | What happens there |
+|------|-------|--------------------|
+| **Wrappers** | `/registry` | Browse every ERC‑20 ↔ ERC‑7984 pair, read live from chain and provenance‑badged. Open one to act on it. |
+| **Reveal** | `/decrypt` | Paste *any* ERC‑7984 address and privately decrypt your own balance — even tokens not in the registry. |
+| **Ledger** | `/activity` | Your wraps, unwraps, sends & receives, reconstructed from on‑chain events. Amounts stay encrypted. |
+| **Build** | `/developers` | Live docs for the SDK + embeddable widget. |
+
+Open any pair and you get the full lifecycle in one panel:
+
+```
+ Faucet ──► Wrap ──► Reveal ──► Send ──► Unwrap
+   │          │         │         │         │
+ mint       ERC-20    EIP-712   encrypted  burn → public-decrypt
+ mocks    → ERC-7984  decrypt   transfer   → finalize → ERC-20 back
+```
+
+Plus the things that make it feel finished: **pending‑unwrap recovery** (close a tab
+mid‑unwrap and Umbra lets you finish it — funds never get stuck), a **universal
+decryptor**, an **embeddable widget**, and a **tokenlists.org export**.
+
+---
+
+## 🚀 Run it in 60 seconds
 
 ```bash
-pnpm install
-cp apps/web/.env.example apps/web/.env.local   # optional — public RPC fallbacks work out of the box
-pnpm dev                                        # http://localhost:3000
+# 1. clone & install (pnpm workspace)
+git clone https://github.com/vestor-dev/umbra
+cd umbra && pnpm install
+
+# 2. (optional) add env — every value has a public fallback
+cp apps/web/.env.example apps/web/.env.local
+
+# 3. go
+pnpm dev            # ▸ http://localhost:3000
 ```
 
-Optional environment variables (all have sensible fallbacks):
+That's it — it boots with public RPCs and no secrets. To actually *transact*, connect
+a wallet on **Sepolia** and hit the faucet. See [Configuration](#-configuration) for
+the (optional) keys that make it faster.
 
-| Var | Purpose |
-|---|---|
-| `NEXT_PUBLIC_SEPOLIA_RPC_URL` | Sepolia RPC (Alchemy/Infura/…); public node used if blank |
-| `NEXT_PUBLIC_MAINNET_RPC_URL` | Ethereum RPC for read‑only browse |
-| `NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID` | Enables the WalletConnect connector |
-| `NEXT_PUBLIC_RELAYER_URL` | Zama relayer endpoint (Sepolia) |
+---
 
-## Building on Umbra
+## 🧠 How it works
 
-**Embed** a full wrap/unwrap box in any site:
+### The big picture
+
+```
+      ┌─────────────────┐        ┌──────────────┐        ┌────────────────────┐
+      │   apps/web      │ reads  │  @umbra/core │  calls │  Zama on Sepolia   │
+      │  Next.js · React│ ─────► │  SDK (viem)  │ ─────► │  registry + FHE     │
+      │  wagmi · Privy  │        │  read+verify │        │  relayer (WASM)     │
+      └─────────────────┘        └──────────────┘        └────────────────────┘
+             ▲                                                     │
+             │  all encryption happens in YOUR browser            │
+             └─────────────────────────────────────────────────────┘
+```
+
+Two rules keep it honest:
+
+1. **Keys never leave your browser.** Confidential crypto runs client‑side via Zama's
+   relayer SDK (WASM), loaded lazily only when you first reveal/decrypt. The app is
+   served cross‑origin‑isolated (COOP/COEP) so the threaded WASM can run.
+2. **The chain is the source of truth.** Server components read the registry through
+   `@umbra/core` and hand the client a plain, serialisable `UiPair` — no RPC secrets
+   or private data ever reach the browser bundle.
+
+### Where the pair list comes from (hybrid)
+
+Umbra merges **two layers**, and the chain always wins:
+
+- **On‑chain registry** *(primary)* — every load reads the official Zama registry in
+  one multicall, then enriches each pair with metadata, an ERC‑165 `supportsInterface`
+  check, the conversion rate, and a bidirectional‑link check. Cached 60s.
+- **Local config** *(additive)* — `committedCustomPairs` in
+  [`apps/web/src/lib/custom-pairs.ts`](apps/web/src/lib/custom-pairs.ts) surfaces pairs
+  not yet on‑chain (local dev, a freshly deployed wrapper).
+
+Every pair is **provenance‑labelled** so trust is never ambiguous:
+
+| Badge | Meaning |
+|-------|---------|
+| 🟢 **Official** | In the registry, valid, implements ERC‑7984 |
+| 🔵 **Mock** | Official testnet mock token |
+| ⚪ **Custom** | You added it (never shown as Official) |
+| 🟠 **Unverified** | In the registry but failed a check |
+
+---
+
+## 🗂 Repo map
+
+```
+umbra/
+├── apps/web/                     # the Next.js app
+│   └── src/
+│       ├── app/                  # routes (App Router)
+│       │   ├── page.tsx          #   /            landing
+│       │   ├── registry/         #   /registry    the wrapper explorer
+│       │   ├── pair/[wrapper]/   #   /pair/…      one token: faucet/wrap/unwrap/send
+│       │   ├── decrypt/          #   /decrypt     universal decryptor
+│       │   ├── activity/         #   /activity    your confidential ledger
+│       │   ├── developers/       #   /developers  live docs
+│       │   ├── embed/            #   /embed       chrome-free iframe widget
+│       │   └── api/              #   token-list · activity · pending-unwraps
+│       ├── components/           # UI + feature components (app-shell, pair-actions, …)
+│       └── lib/                  # clients · wagmi · fhevm · registry-data · pair
+│
+├── packages/core/                # @umbra/core — framework-agnostic read/verify SDK
+│   └── src/                      # abis · chains · registry · verify · types
+│
+└── pnpm-workspace.yaml           # pnpm + Turborepo monorepo
+```
+
+---
+
+## 🧩 Build on Umbra
+
+**Embed** a full wrap/unwrap box in any site — one line:
 
 ```html
 <iframe
@@ -94,7 +192,7 @@ Optional environment variables (all have sensible fallbacks):
 ></iframe>
 ```
 
-**Use the SDK** to read + verify the registry yourself:
+**Read the registry** yourself with the SDK:
 
 ```ts
 import { createPublicClient, http } from "viem";
@@ -103,10 +201,95 @@ import { getEnrichedPairs, SEPOLIA_CHAIN_ID } from "@umbra/core";
 
 const client = createPublicClient({ chain: sepolia, transport: http() });
 const pairs = await getEnrichedPairs(client, SEPOLIA_CHAIN_ID);
+// → every pair, enriched with metadata + validated on-chain
 ```
 
-**Pull the token list** (tokenlists.org schema) from `/api/token-list` (`?include=mock`, `?chainId=`).
+**Consume the token list** (standard [tokenlists.org](https://tokenlists.org) schema):
 
-## License
+```
+GET /api/token-list                 # official pairs
+GET /api/token-list?include=mock    # + testnet mocks
+GET /api/token-list?chainId=11155111
+```
 
-MIT — see [LICENSE](LICENSE).
+---
+
+## 🌐 Networks
+
+| Network | Chain ID | Mode | Registry |
+|---------|----------|------|----------|
+| **Sepolia** | `11155111` | Full — read + write | `0x2f0750Bbb0A246059d80e94c454586a7F27a128e` |
+| **Ethereum** | `1` | Read‑only browse | `0xeb5015fF021DB115aCe010f23F55C2591059bBA0` |
+
+All confidential operations (wrap / unwrap / decrypt) run on **Sepolia** via the Zama
+relayer. Mainnet is browse‑only today; mainnet writes are one config away.
+
+---
+
+## ⚙️ Configuration
+
+Everything is optional — copy `apps/web/.env.example` → `.env.local` and fill what you want:
+
+| Variable | What it does | Needed? |
+|----------|--------------|---------|
+| `NEXT_PUBLIC_PRIVY_APP_ID` | Wallet connect via [Privy](https://privy.io) (EVM wallets + email) | Recommended |
+| `NEXT_PUBLIC_SEPOLIA_RPC_URL` | Your Sepolia RPC (falls back to public nodes) | Optional |
+| `NEXT_PUBLIC_MAINNET_RPC_URL` | Ethereum RPC for read‑only browse | Optional |
+| `NEXT_PUBLIC_RELAYER_URL` | Zama relayer endpoint (Sepolia) | Optional |
+
+> **Privy note:** `localhost` works out of the box. Before deploying, add your
+> production domain to the app's *allowed origins* in the Privy dashboard.
+
+---
+
+## 🛠 Tech stack
+
+- **App** — Next.js 15 (App Router, RSC) · React 19 · TypeScript
+- **Chain** — wagmi v3 · viem · Privy (`@privy-io/react-auth` + `@privy-io/wagmi`)
+- **Confidential** — `@zama-fhe/relayer-sdk` (client‑side WASM)
+- **UI** — Tailwind CSS v4 · Geist · a monochrome "Pearl & Ink" design system with an iridescent sheen
+- **Monorepo** — pnpm workspaces + Turborepo
+
+---
+
+## ❓ FAQ
+
+<details>
+<summary><b>Can people see how much confidential token I hold or send?</b></summary>
+
+No. Balances and transfer amounts are encrypted with FHE. Observers (and block
+explorers) see that a transfer happened, never the amount. Only you can decrypt your
+own balance, via an EIP‑712 signature.
+</details>
+
+<details>
+<summary><b>How do I get test tokens?</b></summary>
+
+Open any <b>Mock</b> pair in the registry and use the <b>Faucet</b> tab to mint the
+underlying ERC‑20, then <b>Wrap</b> it into the confidential version.
+</details>
+
+<details>
+<summary><b>What happens if I close the tab mid‑unwrap?</b></summary>
+
+Unwrapping is a multi‑step async flow (burn → public‑decrypt → finalize). If it's
+interrupted, Umbra detects the pending unwrap on the pair page and lets you finish it —
+your funds are never stuck.
+</details>
+
+<details>
+<summary><b>Is this only for the registry's tokens?</b></summary>
+
+No. The <b>Reveal</b> page decrypts <i>any</i> ERC‑7984 token (validated on‑chain via
+ERC‑165), and you can add your own pairs via <b>Add a pair</b>.
+</details>
+
+---
+
+<div align="center">
+
+Built with 🌙 for the **Zama Developer Program** · Powered by Zama FHE
+
+**MIT** licensed — see [LICENSE](./LICENSE)
+
+</div>
