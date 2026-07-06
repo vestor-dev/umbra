@@ -1,12 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { CheckCircle2, Eye, Loader2 } from "lucide-react";
+import { CheckCircle2, Eye } from "lucide-react";
 import { getAddress, isAddress } from "viem";
 import { useAccount, usePublicClient } from "wagmi";
 import { ERC7984_INTERFACE_ID, erc7984Abi } from "@umbra/core";
 import { DecryptBalance, type DecryptToken } from "@/components/decrypt-balance";
 import { ConnectButton } from "@/components/connect-button";
+import { Spinner } from "@/components/spinner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -90,7 +91,7 @@ export default function DecryptPage() {
             autoComplete="off"
           />
           <Button onClick={check} disabled={checking} className="sm:w-auto">
-            {checking ? <Loader2 className="h-4 w-4 animate-spin" /> : <Eye className="h-4 w-4" />}
+            {checking ? <Spinner size="sm" /> : <Eye className="h-4 w-4" />}
             {checking ? "Checking…" : "Check token"}
           </Button>
         </div>

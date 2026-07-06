@@ -1,10 +1,13 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { usePrivy } from "@privy-io/react-auth";
 import { useAccount, useChainId, useSwitchChain } from "wagmi";
 import { sepolia } from "wagmi/chains";
-import { Loader2, LogOut, Wallet } from "lucide-react";
+import { LogOut, Wallet } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/spinner";
 
 function short(addr: string) {
   return `${addr.slice(0, 6)}…${addr.slice(-4)}`;
@@ -15,12 +18,21 @@ export function ConnectButton() {
   const { address } = useAccount();
   const chainId = useChainId();
   const { switchChain } = useSwitchChain();
+  const [confirmOpen, setConfirmOpen] = useState(false);
+
+  // Escape closes the confirm dialog.
+  useEffect(() => {
+    if (!confirmOpen) return;
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setConfirmOpen(false);
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [confirmOpen]);
 
   // Privy is still booting.
   if (!ready) {
     return (
       <Button variant="secondary" disabled className="opacity-70">
-        <Loader2 className="h-4 w-4 animate-spin" />
+        <Spinner size="sm" />
         Loading…
       </Button>
     );
@@ -54,10 +66,11 @@ export function ConnectButton() {
           Sepolia
         </span>
       ) : null}
+
       <button
         type="button"
-        onClick={() => logout()}
-        title="Disconnect"
+        onClick={() => setConfirmOpen(true)}
+        title="Wallet options"
         className="group inline-flex h-9 items-center gap-2 rounded-full border border-hairline bg-surface pl-1.5 pr-3 text-sm font-medium text-ink-soft shadow-soft transition-colors duration-150 hover:bg-surface-2"
       >
         <span
@@ -68,6 +81,56 @@ export function ConnectButton() {
         <span className="font-mono text-xs">{addr ? short(addr) : "Connected"}</span>
         <LogOut className="h-3.5 w-3.5 text-faint transition-colors duration-150 group-hover:text-ink" />
       </button>
+
+      {confirmOpen &&
+        typeof document !== "undefined" &&
+        createPortal(
+          <div
+            className="fixed inset-0 z-[60] flex items-center justify-center p-4"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Disconnect wallet"
+          >
+            <div
+              className="absolute inset-0 bg-ink/40 backdrop-blur-sm"
+              onClick={() => setConfirmOpen(false)}
+            />
+            <div className="animate-fade-up relative w-full max-w-xs rounded-2xl border border-hairline bg-elevated p-6 text-center shadow-float">
+              <span
+                className="mx-auto grid h-12 w-12 place-items-center rounded-full ring-4 ring-canvas"
+                style={{ backgroundColor: `hsl(${avatarHue} 58% 45%)` }}
+                aria-hidden
+              >
+                <Wallet className="h-5 w-5 text-white" />
+              </span>
+              <h2 className="font-display mt-4 text-lg text-ink">Disconnect wallet?</h2>
+              {addr && <p className="mt-1 font-mono text-xs text-muted">{short(addr)}</p>}
+              <p className="mt-2 text-xs leading-relaxed text-muted">
+                You&apos;ll need to reconnect to wrap, unwrap, or reveal balances again.
+              </p>
+              <div className="mt-5 flex gap-2">
+                <Button
+                  variant="secondary"
+                  className="flex-1"
+                  onClick={() => setConfirmOpen(false)}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  className="flex-1 bg-danger text-white shadow-pill hover:bg-danger hover:brightness-105"
+                  onClick={() => {
+                    setConfirmOpen(false);
+                    logout();
+                  }}
+                >
+                  <LogOut className="h-4 w-4" />
+                  Disconnect
+                </Button>
+              </div>
+            </div>
+          </div>,
+          document.body,
+        )}
     </div>
   );
 }

@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Lock, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
 import { MAINNET_CHAIN_ID, SEPOLIA_CHAIN_ID, type SupportedChainId } from "@umbra/core";
 import { PairsTable } from "@/components/pairs-table";
 import { Reveal } from "@/components/reveal";
+import { RefreshButton } from "@/components/refresh-button";
+import { Spinner } from "@/components/spinner";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/components/ui/cn";
 import { getPairsCached } from "@/lib/registry-data";
@@ -91,7 +93,10 @@ export default async function RegistryPage({
               : "Open any pair to faucet, wrap, send, reveal, and unwrap."}
           </p>
         </div>
-        <NetworkSwitch isMainnet={isMainnet} />
+        <div className="flex items-center gap-2.5">
+          <RefreshButton />
+          <NetworkSwitch isMainnet={isMainnet} />
+        </div>
       </Reveal>
 
       {/* Stats strip */}
@@ -118,10 +123,11 @@ export default async function RegistryPage({
         </div>
 
         {pairs.length === 0 ? (
-          <div className="bg-grid flex flex-col items-center gap-3 rounded-2xl border border-hairline bg-surface/50 px-6 py-16 text-center shadow-soft">
-            <span className="grid h-11 w-11 place-items-center rounded-full bg-accent-soft text-ink">
-              <Lock className="h-5 w-5" />
-            </span>
+          <div className="bg-grid flex flex-col items-center gap-4 rounded-2xl border border-hairline bg-surface/50 px-6 py-16 text-center shadow-soft">
+            <div className="relative grid place-items-center">
+              <div className="orb absolute h-14 w-14 opacity-60 blur-[2px]" aria-hidden />
+              <Spinner size="lg" className="relative" />
+            </div>
             <p className="text-sm font-medium text-ink">Reading the registry from chain…</p>
             <p className="max-w-xs text-xs text-muted">
               This loads on-chain in one multicall. Refresh in a moment if it doesn&apos;t appear.

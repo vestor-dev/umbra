@@ -7,7 +7,6 @@ import {
   ArrowUpRight,
   ExternalLink,
   Inbox,
-  Loader2,
   Lock,
   Package,
   PackageOpen,
@@ -15,6 +14,7 @@ import {
 } from "lucide-react";
 import { TokenIcon } from "@/components/token-icon";
 import { ConnectCard } from "@/components/connect-card";
+import { Spinner } from "@/components/spinner";
 import { cn } from "@/components/ui/cn";
 import type { ActivityItem, ActivityKind } from "@/app/api/activity/route";
 
@@ -158,11 +158,7 @@ export function ActivityFeed() {
           aria-label="Refresh"
           className="inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-hairline px-2.5 py-1.5 text-xs text-zinc-300 transition-colors hover:bg-elevated disabled:opacity-50"
         >
-          {loading ? (
-            <Loader2 className="h-3.5 w-3.5 animate-spin" />
-          ) : (
-            <RefreshCw className="h-3.5 w-3.5" />
-          )}
+          {loading ? <Spinner size="sm" /> : <RefreshCw className="h-3.5 w-3.5" />}
           <span className="hidden sm:inline">Refresh</span>
         </button>
       </div>
@@ -171,10 +167,10 @@ export function ActivityFeed() {
         <div className="divide-y divide-hairline">
           {[0, 1, 2].map((i) => (
             <div key={i} className="flex items-center gap-3 px-5 py-4">
-              <div className="h-9 w-9 animate-pulse rounded-full bg-surface-2" />
+              <div className="skeleton h-9 w-9 rounded-full" />
               <div className="flex-1 space-y-2">
-                <div className="h-3 w-32 animate-pulse rounded bg-surface-2" />
-                <div className="h-2.5 w-20 animate-pulse rounded bg-surface-2" />
+                <div className="skeleton h-3 w-32" />
+                <div className="skeleton h-2.5 w-20" />
               </div>
             </div>
           ))}
