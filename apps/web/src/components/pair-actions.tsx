@@ -892,16 +892,28 @@ function TransferCard({
 
   return (
     <Card title="Send privately" subtitle="Amount hidden from all observers">
+      <label htmlFor="send-to" className="mb-1.5 block text-xs font-medium text-muted">
+        Recipient wallet address
+      </label>
       <input
+        id="send-to"
         className={cn(inputCls, "font-mono")}
         value={to}
         onChange={(e) => setTo(e.target.value)}
-        placeholder="0x recipient address"
+        placeholder="0x… the recipient's wallet address"
         disabled={inputsDisabled}
-        aria-label="Recipient address"
+        aria-label="Recipient wallet address"
       />
+      <p className="mt-1.5 text-[11px] leading-relaxed text-faint">
+        The person&apos;s own account address (like yours) — not a token contract. The amount stays
+        encrypted end-to-end.
+      </p>
       <div className="mt-3">
+        <label htmlFor="send-amount" className="mb-1.5 block text-xs font-medium text-muted">
+          Amount
+        </label>
         <AmountInput
+          id="send-amount"
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
           disabled={inputsDisabled}

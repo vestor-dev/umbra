@@ -5,7 +5,7 @@ import { createPortal } from "react-dom";
 import { usePrivy } from "@privy-io/react-auth";
 import { useAccount, useChainId, useSwitchChain } from "wagmi";
 import { sepolia } from "wagmi/chains";
-import { LogOut, Wallet } from "lucide-react";
+import { Check, Copy, ExternalLink, LogOut, Wallet } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/spinner";
 
@@ -18,15 +18,17 @@ export function ConnectButton() {
   const { address } = useAccount();
   const chainId = useChainId();
   const { switchChain } = useSwitchChain();
-  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [copied, setCopied] = useState(false);
 
-  // Escape closes the confirm dialog.
+  // Escape closes the account dialog; reset the "copied" flash when it opens.
   useEffect(() => {
-    if (!confirmOpen) return;
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setConfirmOpen(false);
+    if (!open) return;
+    setCopied(false);
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
-  }, [confirmOpen]);
+  }, [open]);
 
   // Privy is still booting.
   if (!ready) {
@@ -53,6 +55,17 @@ export function ConnectButton() {
   const wrongNetwork = Boolean(address) && chainId !== sepolia.id;
   const avatarHue = addr ? parseInt(addr.slice(2, 8), 16) % 360 : 210;
 
+  const copyAddress = async () => {
+    if (!addr) return;
+    try {
+      await navigator.clipboard.writeText(addr);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1600);
+    } catch {
+      /* clipboard unavailable */
+    }
+  };
+
   return (
     <div className="flex flex-wrap items-center gap-2">
       {wrongNetwork ? (
@@ -69,8 +82,8 @@ export function ConnectButton() {
 
       <button
         type="button"
-        onClick={() => setConfirmOpen(true)}
-        title="Wallet options"
+        onClick={() => setOpen(true)}
+        title="Wallet"
         className="group inline-flex h-9 items-center gap-2 rounded-full border border-hairline bg-surface pl-1.5 pr-3 text-sm font-medium text-ink-soft shadow-soft transition-colors duration-150 hover:bg-surface-2"
       >
         <span
@@ -79,47 +92,72 @@ export function ConnectButton() {
           aria-hidden
         />
         <span className="font-mono text-xs">{addr ? short(addr) : "Connected"}</span>
-        <LogOut className="h-3.5 w-3.5 text-faint transition-colors duration-150 group-hover:text-ink" />
       </button>
 
-      {confirmOpen &&
+      {open &&
         typeof document !== "undefined" &&
         createPortal(
           <div
             className="fixed inset-0 z-[60] flex items-center justify-center p-4"
             role="dialog"
             aria-modal="true"
-            aria-label="Disconnect wallet"
+            aria-label="Wallet"
           >
             <div
               className="absolute inset-0 bg-ink/40 backdrop-blur-sm"
-              onClick={() => setConfirmOpen(false)}
+              onClick={() => setOpen(false)}
             />
-            <div className="animate-fade-up relative w-full max-w-xs rounded-2xl border border-hairline bg-elevated p-6 text-center shadow-float">
+            <div className="animate-fade-up relative w-full max-w-sm rounded-2xl border border-hairline bg-elevated p-6 text-center shadow-float">
               <span
-                className="mx-auto grid h-12 w-12 place-items-center rounded-full ring-4 ring-canvas"
+                className="mx-auto grid h-14 w-14 place-items-center rounded-full ring-4 ring-canvas"
                 style={{ backgroundColor: `hsl(${avatarHue} 58% 45%)` }}
                 aria-hidden
               >
-                <Wallet className="h-5 w-5 text-white" />
+                <Wallet className="h-6 w-6 text-white" />
               </span>
-              <h2 className="font-display mt-4 text-lg text-ink">Disconnect wallet?</h2>
-              {addr && <p className="mt-1 font-mono text-xs text-muted">{short(addr)}</p>}
-              <p className="mt-2 text-xs leading-relaxed text-muted">
-                You&apos;ll need to reconnect to wrap, unwrap, or reveal balances again.
-              </p>
-              <div className="mt-5 flex gap-2">
-                <Button
-                  variant="secondary"
-                  className="flex-1"
-                  onClick={() => setConfirmOpen(false)}
+              <h2 className="font-display mt-4 text-lg text-ink">Your wallet</h2>
+              {addr && (
+                <p className="mx-auto mt-1 max-w-[16rem] break-all font-mono text-xs text-muted">
+                  {addr}
+                </p>
+              )}
+
+              <div className="mt-5 grid gap-2">
+                <button
+                  type="button"
+                  onClick={copyAddress}
+                  className="inline-flex h-10 items-center justify-center gap-2 rounded-lg border border-hairline bg-surface text-sm font-medium text-ink shadow-soft transition-colors hover:bg-surface-2"
                 >
-                  Cancel
+                  {copied ? (
+                    <>
+                      <Check className="h-4 w-4 text-success" /> Copied!
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="h-4 w-4" /> Copy address
+                    </>
+                  )}
+                </button>
+                {addr && (
+                  <a
+                    href={`https://sepolia.etherscan.io/address/${addr}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex h-10 items-center justify-center gap-2 rounded-lg border border-hairline bg-surface text-sm font-medium text-ink shadow-soft transition-colors hover:bg-surface-2"
+                  >
+                    <ExternalLink className="h-4 w-4" /> View on Etherscan
+                  </a>
+                )}
+              </div>
+
+              <div className="mt-4 flex gap-2 border-t border-hairline pt-4">
+                <Button variant="secondary" className="flex-1" onClick={() => setOpen(false)}>
+                  Close
                 </Button>
                 <Button
                   className="flex-1 bg-danger text-white shadow-pill hover:bg-danger hover:brightness-105"
                   onClick={() => {
-                    setConfirmOpen(false);
+                    setOpen(false);
                     logout();
                   }}
                 >
