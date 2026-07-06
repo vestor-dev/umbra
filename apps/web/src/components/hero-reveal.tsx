@@ -34,7 +34,7 @@ export function HeroReveal() {
         <button
           type="button"
           onClick={() => setRevealed((v) => !v)}
-          className="inline-flex h-9 shrink-0 items-center gap-1.5 rounded-full bg-accent px-3.5 text-xs font-medium text-accent-fg transition-[background-color,transform] duration-150 hover:bg-accent-hover active:translate-y-px"
+          className="inline-flex h-9 shrink-0 items-center gap-1.5 rounded-lg bg-accent px-3.5 text-xs font-medium text-accent-fg transition-[background-color,transform] duration-150 hover:bg-accent-hover active:translate-y-px"
         >
           {revealed ? (
             <>

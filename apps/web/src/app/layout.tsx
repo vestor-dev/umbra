@@ -1,24 +1,25 @@
 import type { Metadata } from "next";
-import { Fraunces, Hanken_Grotesk, JetBrains_Mono } from "next/font/google";
+import { Instrument_Serif, Hanken_Grotesk, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
-import { Header } from "@/components/header";
-import { Footer } from "@/components/footer";
+import { AppShell } from "@/components/app-shell";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
-// Editorial serif display face — carries the brand voice (variable: full range).
-const fraunces = Fraunces({
+// High-contrast editorial serif — the display voice.
+const instrument = Instrument_Serif({
   subsets: ["latin"],
-  variable: "--font-fraunces",
+  weight: ["400"],
+  style: ["normal", "italic"],
+  variable: "--font-instrument",
   display: "swap",
 });
-// Humanist grotesque — calm, legible UI body.
+// Humanist grotesque — UI body.
 const hanken = Hanken_Grotesk({
   subsets: ["latin"],
   variable: "--font-hanken",
   display: "swap",
 });
-// Mono — amounts, addresses, ciphertext.
+// Mono — labels, amounts, addresses, ciphertext.
 const jbmono = JetBrains_Mono({
   subsets: ["latin"],
   variable: "--font-jbmono",
@@ -38,17 +39,12 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${fraunces.variable} ${hanken.variable} ${jbmono.variable}`}
+      className={`${instrument.variable} ${hanken.variable} ${jbmono.variable}`}
     >
       <body className="min-h-screen bg-canvas text-ink antialiased">
         <Providers>
           <TooltipProvider delayDuration={150} skipDelayDuration={300}>
-            <Header />
-            {/* Flex wrapper pins the footer to the bottom on short pages. */}
-            <div className="flex min-h-[calc(100dvh-3.5rem)] flex-col">
-              <div className="flex-1">{children}</div>
-              <Footer />
-            </div>
+            <AppShell>{children}</AppShell>
           </TooltipProvider>
         </Providers>
       </body>

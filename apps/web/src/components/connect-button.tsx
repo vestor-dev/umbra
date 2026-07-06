@@ -179,14 +179,14 @@ export function ConnectButton() {
   const avatarHue = address ? parseInt(address.slice(2, 8), 16) % 360 : 210;
 
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex flex-wrap items-center gap-2">
       {wrongNetwork ? (
         <Button variant="warn" size="sm" onClick={() => switchChain({ chainId: sepolia.id })}>
           <span className="h-1.5 w-1.5 rounded-full bg-white/70" />
           Switch to Sepolia
         </Button>
       ) : (
-        <span className="hidden h-9 items-center gap-1.5 rounded-full border border-hairline bg-surface px-3 text-xs font-medium text-ink-soft sm:inline-flex">
+        <span className="hidden h-9 items-center gap-1.5 rounded-lg border border-hairline bg-surface px-3 text-xs font-medium text-ink-soft sm:inline-flex">
           <span className="h-1.5 w-1.5 rounded-full bg-success shadow-[0_0_8px_0] shadow-success/60" />
           Sepolia
         </span>
@@ -195,7 +195,7 @@ export function ConnectButton() {
         type="button"
         onClick={() => disconnect()}
         title="Disconnect"
-        className="group inline-flex h-9 items-center gap-2 rounded-full border border-hairline bg-surface pl-1.5 pr-3 text-sm font-medium text-ink-soft shadow-[0_1px_2px_rgba(21,22,34,0.04)] transition-colors duration-150 hover:border-hairline-strong hover:bg-surface-2"
+        className="group inline-flex h-9 items-center gap-2 rounded-lg border border-hairline bg-surface pl-1.5 pr-3 text-sm font-medium text-ink-soft shadow-[0_1px_2px_rgba(21,22,34,0.04)] transition-colors duration-150 hover:border-hairline-strong hover:bg-surface-2"
       >
         <span
           className="h-5 w-5 rounded-full"
