@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { HeroReveal } from "@/components/hero-reveal";
+import { Reveal } from "@/components/reveal";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/components/ui/cn";
 
@@ -116,43 +117,51 @@ export default function Home() {
         </div>
 
         <ul>
-          {INDEX.map((item) => (
+          {INDEX.map((item, i) => (
             <li key={item.n}>
-              <Link
-                href={item.href}
-                className="group grid grid-cols-[3rem_1fr_auto] items-center gap-5 border-b border-hairline py-7 transition-colors duration-200 hover:bg-ink/[0.025] sm:grid-cols-[5rem_1fr_auto] sm:gap-8"
-              >
-                <span className="iri-text font-display text-3xl sm:text-5xl">{item.n}</span>
-                <div className="min-w-0">
-                  <h3 className="font-display text-2xl text-ink sm:text-[1.75rem]">{item.title}</h3>
-                  <p className="mt-1.5 max-w-xl text-sm leading-relaxed text-muted sm:text-base">
-                    {item.body}
-                  </p>
-                </div>
-                <ArrowUpRight className="h-5 w-5 text-faint transition-all duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-ink" />
-              </Link>
+              <Reveal delay={i * 55}>
+                <Link
+                  href={item.href}
+                  className="group grid grid-cols-[3rem_1fr_auto] items-center gap-5 border-b border-hairline py-7 transition-[background-color,padding] duration-300 hover:bg-surface hover:px-4 sm:grid-cols-[5rem_1fr_auto] sm:gap-8"
+                >
+                  <span className="iri-text font-display text-3xl transition-transform duration-300 group-hover:scale-110 sm:text-5xl">
+                    {item.n}
+                  </span>
+                  <div className="min-w-0">
+                    <h3 className="font-display text-2xl text-ink sm:text-[1.75rem]">{item.title}</h3>
+                    <p className="mt-1.5 max-w-xl text-sm leading-relaxed text-muted sm:text-base">
+                      {item.body}
+                    </p>
+                  </div>
+                  <ArrowUpRight className="h-5 w-5 text-faint transition-all duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-ink" />
+                </Link>
+              </Reveal>
             </li>
           ))}
         </ul>
       </section>
 
       {/* ========================= STATEMENT BAND ========================= */}
-      <section className="bg-ink px-6 py-20 text-surface sm:py-28 lg:px-12">
-        <p className="label text-surface/50">On-chain, forever — and still private</p>
-        <p className="font-display mt-6 max-w-4xl text-[clamp(1.9rem,4.5vw,3.25rem)] leading-[1.08] tracking-[-0.01em]">
-          The chain sees that value moved.{" "}
-          <span className="text-surface/55 italic">It never sees how much.</span>
-        </p>
-        <p className="mt-8 max-w-xl text-sm leading-relaxed text-surface/60">
-          Every confidential balance and transfer is encrypted with Zama&apos;s fully homomorphic
-          encryption. Totals stay public; what you personally hold, and what you move, does not —
-          only you hold the key to reveal it.
-        </p>
+      <section className="relative overflow-hidden bg-ink px-6 py-20 text-surface sm:py-28 lg:px-12">
+        {/* faint iridescent bloom in the dark */}
+        <div className="iri pointer-events-none absolute -right-40 -top-40 h-96 w-96 rounded-full opacity-20 blur-3xl" aria-hidden />
+        <Reveal className="relative">
+          <p className="label text-surface/50">On-chain, forever — and still private</p>
+          <p className="font-display mt-6 max-w-4xl text-[clamp(1.9rem,4.5vw,3.25rem)] leading-[1.08] tracking-[-0.01em]">
+            The chain sees that value moved.{" "}
+            <span className="text-surface/55 italic">It never sees how much.</span>
+          </p>
+          <p className="mt-8 max-w-xl text-sm leading-relaxed text-surface/60">
+            Every confidential balance and transfer is encrypted with Zama&apos;s fully homomorphic
+            encryption. Totals stay public; what you personally hold, and what you move, does not —
+            only you hold the key to reveal it.
+          </p>
+        </Reveal>
       </section>
 
       {/* ============================= CTA BAND ============================= */}
       <section className="px-6 py-20 sm:py-24 lg:px-12">
-        <div className="flex flex-col items-start justify-between gap-8 sm:flex-row sm:items-end">
+        <Reveal className="flex flex-col items-start justify-between gap-8 sm:flex-row sm:items-end">
           <div>
             <p className="label text-faint">Start here</p>
             <h2 className="font-display mt-4 max-w-2xl text-[clamp(2rem,5vw,3.5rem)] leading-[1.02] text-ink">
@@ -162,7 +171,7 @@ export default function Home() {
           <div className="flex flex-wrap gap-3">
             <Link href="/registry" className={cn(buttonVariants({ size: "lg" }))}>
               Browse wrappers
-              <ArrowRight className="h-4 w-4" />
+              <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover/btn:translate-x-0.5" />
             </Link>
             <Link
               href="/developers"
@@ -171,7 +180,7 @@ export default function Home() {
               Read the docs
             </Link>
           </div>
-        </div>
+        </Reveal>
       </section>
     </div>
   );

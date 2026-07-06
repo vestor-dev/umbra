@@ -34,9 +34,9 @@ export function EmbedWidget({
     <div className="mx-auto flex min-h-screen w-full max-w-md flex-col gap-3 px-4 py-5">
       <div className="flex items-center justify-between gap-3">
         <div className="flex items-center gap-2">
-          <Image src="/umbra-mark.png" alt="" width={20} height={23} className="h-5 w-auto" />
-          <span className="text-sm font-semibold text-zinc-100">{symbol}</span>
-          <span className="rounded-full bg-accent-soft px-2 py-0.5 text-[11px] font-medium text-accent-hover">
+          <Image src="/umbra-mark.svg" alt="" width={20} height={20} className="h-5 w-5" />
+          <span className="text-sm font-semibold text-ink">{symbol}</span>
+          <span className="rounded-full bg-accent-soft px-2 py-0.5 text-[11px] font-medium text-ink">
             confidential
           </span>
         </div>

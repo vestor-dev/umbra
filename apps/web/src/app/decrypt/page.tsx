@@ -6,6 +6,7 @@ import { getAddress, isAddress } from "viem";
 import { useAccount, usePublicClient } from "wagmi";
 import { ERC7984_INTERFACE_ID, erc7984Abi } from "@umbra/core";
 import { DecryptBalance, type DecryptToken } from "@/components/decrypt-balance";
+import { ConnectButton } from "@/components/connect-button";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -61,23 +62,20 @@ export default function DecryptPage() {
   }
 
   return (
-    <main className="mx-auto max-w-2xl px-6 py-12">
+    <main className="mx-auto max-w-2xl px-6 py-12 lg:py-16">
       <div className="animate-fade-up">
-        <span className="inline-flex items-center gap-1.5 rounded-full border border-hairline bg-surface px-3 py-1 text-xs font-medium text-zinc-300">
-          <Eye className="h-3.5 w-3.5 text-accent" />
-          Universal decryptor
-        </span>
-        <h1 className="mt-4 text-3xl font-bold tracking-tight text-zinc-50">
+        <p className="label text-muted">Universal decryptor</p>
+        <h1 className="font-display mt-4 text-4xl tracking-tight text-ink sm:text-5xl">
           Decrypt any ERC-7984 token
         </h1>
-        <p className="mt-2 text-sm leading-relaxed text-zinc-400">
+        <p className="mt-3 text-base leading-relaxed text-muted">
           Paste any confidential token address to privately decrypt your own balance — even tokens
           that aren’t in the registry. Validated on-chain via ERC-165.
         </p>
       </div>
 
-      <div className="mt-7 rounded-2xl border border-hairline bg-surface p-5">
-        <label htmlFor="token-addr" className="text-xs font-medium text-zinc-400">
+      <div className="animate-fade-up mt-8 rounded-2xl border border-hairline bg-surface p-5 shadow-soft" style={{ animationDelay: "0.1s" }}>
+        <label htmlFor="token-addr" className="text-xs font-medium text-muted">
           Confidential token address
         </label>
         <div className="mt-2 flex flex-col gap-2 sm:flex-row">
@@ -98,16 +96,19 @@ export default function DecryptPage() {
         </div>
         {error && <p className="mt-3 text-sm text-danger">{error}</p>}
         {!isConnected && !error && (
-          <p className="mt-3 text-sm text-zinc-500">Connect your wallet to decrypt your balance.</p>
+          <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-hairline bg-surface-2 px-4 py-3">
+            <p className="text-sm text-muted">Connect your wallet to decrypt your balance.</p>
+            <ConnectButton />
+          </div>
         )}
       </div>
 
       {token && (
         <div className="mt-6 space-y-3">
-          <div className="flex items-center gap-2 text-sm text-zinc-300">
+          <div className="flex items-center gap-2 text-sm text-ink-soft">
             <CheckCircle2 className="h-4 w-4 text-success" />
             ERC-7984 verified — {token.symbol ?? "Confidential token"}
-            <span className="text-zinc-500">· {token.decimals ?? 6} decimals</span>
+            <span className="text-muted">· {token.decimals ?? 6} decimals</span>
           </div>
           <DecryptBalance token={token} />
         </div>

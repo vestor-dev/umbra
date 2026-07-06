@@ -1,82 +1,77 @@
 @import "tailwindcss";
 
 /* ============================================================================
-   Umbra design system — "Pearl & Ink"
+   Umbra design system — "Pearl & Ink" (luminous)
    ----------------------------------------------------------------------------
-   A monochrome workstation: warm SMOKE-WHITE paper and near-black INK, with a
-   single signature move — an iridescent / pearlescent sheen (the "shine") that
-   stands in for light refracting through shadow. No colored accent; colour only
-   ever appears as that holographic gradient. Layout is a fixed left rail, not a
-   top bar.
-
-   Tailwind v4 (@theme) generates utilities from these tokens.
-   The zinc ramp is inverted + warmed so the dark-authored components read
-   correctly on smoke-white.
+   A monochrome workstation on a cool, LUMINOUS white — a soft radial gradient
+   that's brightest at the top-centre and settles to a light pearl-grey, so the
+   page reads as lit rather than flat. Ink is near-black. The only colour is an
+   iridescent sheen, used sparingly. Layout is a fixed left rail.
 ============================================================================ */
 @theme {
-  /* — Surfaces (warm smoke) — */
-  --color-canvas: #f0eee8;
-  --color-surface: #fbfaf6;
-  --color-surface-2: #e7e4db;
+  /* — Surfaces (cool luminous) — */
+  --color-canvas: #eceef2;
+  --color-surface: #ffffff;
+  --color-surface-2: #eff0f4;
   --color-elevated: #ffffff;
 
-  /* — Hairline borders (ink at low alpha) — */
-  --color-hairline: rgba(14, 13, 12, 0.1);
-  --color-hairline-strong: rgba(14, 13, 12, 0.18);
+  /* — Hairline borders — */
+  --color-hairline: rgba(13, 13, 16, 0.09);
+  --color-hairline-strong: rgba(13, 13, 16, 0.16);
 
   /* — Ink (semantic text) — */
-  --color-ink: #0e0d0c;
-  --color-ink-soft: #33312c;
-  --color-muted: #59564e;
-  --color-faint: #8b8779;
+  --color-ink: #0d0d10;
+  --color-ink-soft: #2f2f36;
+  --color-muted: #56565f;
+  --color-faint: #8a8a94;
 
   /* — "Accent" is INK (monochrome). Colour lives only in the iridescence. — */
-  --color-accent: #0e0d0c;
-  --color-accent-hover: #2a2823;
-  --color-accent-fg: #fbfaf6;
-  --color-accent-soft: rgba(14, 13, 12, 0.06);
-  --color-accent-ring: rgba(14, 13, 12, 0.35);
+  --color-accent: #0d0d10;
+  --color-accent-hover: #26262c;
+  --color-accent-fg: #fbfbfd;
+  --color-accent-soft: rgba(13, 13, 16, 0.05);
+  --color-accent-ring: rgba(13, 13, 16, 0.32);
 
-  /* — Semantic states (kept muted; used sparingly) — */
-  --color-success: #1f7a52;
-  --color-success-soft: rgba(31, 122, 82, 0.12);
+  /* — Semantic states — */
+  --color-success: #14875a;
+  --color-success-soft: rgba(20, 135, 90, 0.12);
   --color-warn: #9a5b12;
   --color-warn-soft: rgba(154, 91, 18, 0.12);
-  --color-danger: #b23b34;
-  --color-danger-soft: rgba(178, 59, 52, 0.1);
+  --color-danger: #c23a33;
+  --color-danger-soft: rgba(194, 58, 51, 0.1);
   --color-info: #2f5fb0;
   --color-info-soft: rgba(47, 95, 176, 0.12);
 
-  /* — Inverted + warmed zinc ramp (ink → smoke) — */
-  --color-zinc-50: #080807;
-  --color-zinc-100: #0e0d0c; /* primary ink */
-  --color-zinc-200: #1c1b18;
-  --color-zinc-300: #2b2924; /* strong secondary */
-  --color-zinc-400: #4a4740; /* secondary / muted */
-  --color-zinc-500: #605d54; /* labels / muted */
-  --color-zinc-600: #837f72; /* faint / placeholder */
-  --color-zinc-700: #ababa0; /* subtle */
-  --color-zinc-800: #d9d5cb; /* hairline surfaces / borders */
-  --color-zinc-900: #e7e3d9; /* recessed surface */
-  --color-zinc-950: #f0ede5; /* lightest surface */
-  --color-neutral-100: #0e0d0c;
-  --color-neutral-400: #4a4740;
-  --color-neutral-500: #605d54;
-  --color-neutral-800: #d9d5cb;
-  --color-neutral-900: #e7e3d9;
+  /* — Inverted + cooled zinc ramp (ink → pearl) — */
+  --color-zinc-50: #08080a;
+  --color-zinc-100: #0d0d10; /* primary ink */
+  --color-zinc-200: #1b1b1f;
+  --color-zinc-300: #2a2a30; /* strong secondary */
+  --color-zinc-400: #47474f; /* secondary / muted */
+  --color-zinc-500: #5e5e67; /* labels / muted */
+  --color-zinc-600: #808089; /* faint / placeholder */
+  --color-zinc-700: #a9a9b2; /* subtle */
+  --color-zinc-800: #dcdce2; /* hairline surfaces / borders */
+  --color-zinc-900: #e9e9ee; /* recessed surface */
+  --color-zinc-950: #f2f2f6; /* lightest surface */
+  --color-neutral-100: #0d0d10;
+  --color-neutral-400: #47474f;
+  --color-neutral-500: #5e5e67;
+  --color-neutral-800: #dcdce2;
+  --color-neutral-900: #e9e9ee;
 
-  /* — Type — high-contrast editorial serif display + grotesque body + mono — */
-  --font-display: var(--font-instrument), "Times New Roman", serif;
-  --font-sans: var(--font-hanken), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--font-jbmono), ui-monospace, "SF Mono", "Menlo", monospace;
+  /* — Type — clean, modern Geist throughout — */
+  --font-display: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, "SF Mono", "Menlo", monospace;
 
   /* — Motion — */
-  --ease-out-soft: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-in-soft: cubic-bezier(0.4, 0, 1, 1);
 }
 
 /* ----------------------------------------------------------------------------
-   Base
+   Base — the luminous canvas
 ---------------------------------------------------------------------------- */
 html,
 body {
@@ -85,21 +80,27 @@ body {
 }
 
 body {
-  background: var(--color-canvas);
   color: var(--color-ink);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  background-color: var(--color-canvas);
+  background-image: radial-gradient(
+    128% 90% at 50% -12%,
+    #fdfdfe 0%,
+    #f1f2f6 46%,
+    #e6e7ed 100%
+  );
+  background-attachment: fixed;
 }
 
-/* Editorial display face */
 .font-display {
   font-family: var(--font-display);
-  letter-spacing: -0.01em;
-  font-weight: 400;
+  letter-spacing: -0.03em;
+  font-weight: 600;
 }
 
-/* Mono "index" label — uppercase, tracked (the brutalist/editorial signal) */
+/* Mono "index" label — uppercase, tracked */
 .label {
   font-family: var(--font-mono);
   text-transform: uppercase;
@@ -107,7 +108,6 @@ body {
   font-size: 0.6875rem;
 }
 
-/* Tabular numerals for amounts/addresses */
 .font-mono {
   font-feature-settings: "tnum" 1, "zero" 1;
   font-variant-numeric: tabular-nums slashed-zero;
@@ -120,20 +120,20 @@ body {
 
 * {
   scrollbar-width: thin;
-  scrollbar-color: rgba(14, 13, 12, 0.2) transparent;
+  scrollbar-color: rgba(13, 13, 16, 0.2) transparent;
 }
 *::-webkit-scrollbar {
   width: 10px;
   height: 10px;
 }
 *::-webkit-scrollbar-thumb {
-  background: rgba(14, 13, 12, 0.16);
+  background: rgba(13, 13, 16, 0.16);
   border-radius: 9999px;
   border: 3px solid transparent;
   background-clip: content-box;
 }
 *::-webkit-scrollbar-thumb:hover {
-  background: rgba(14, 13, 12, 0.3);
+  background: rgba(13, 13, 16, 0.3);
   background-clip: content-box;
 }
 
@@ -146,19 +146,36 @@ body {
 }
 
 /* ----------------------------------------------------------------------------
+   Soft-shadow system (the Sofer-style float)
+---------------------------------------------------------------------------- */
+.shadow-soft {
+  box-shadow:
+    0 1px 2px rgba(13, 13, 16, 0.04),
+    0 8px 24px -12px rgba(13, 13, 16, 0.16);
+}
+.shadow-float {
+  box-shadow:
+    0 2px 4px rgba(13, 13, 16, 0.04),
+    0 24px 60px -24px rgba(13, 13, 16, 0.28);
+}
+.shadow-pill {
+  box-shadow:
+    0 1px 2px rgba(13, 13, 16, 0.12),
+    0 12px 28px -14px rgba(13, 13, 16, 0.5);
+}
+
+/* ----------------------------------------------------------------------------
    The signature: iridescence / pearl sheen
 ---------------------------------------------------------------------------- */
-
-/* Holographic gradient — the ONLY colour in the system */
 .iri {
   background: linear-gradient(
     115deg,
-    #b8c6ff 0%,
-    #f3c9ec 24%,
-    #c7f0dd 48%,
-    #fce7b0 68%,
-    #bdb6ff 88%,
-    #b8c6ff 100%
+    #b3c4ff 0%,
+    #f0c3ea 24%,
+    #bfeed7 48%,
+    #ffe6a8 68%,
+    #b7b0ff 88%,
+    #b3c4ff 100%
   );
   background-size: 220% 220%;
 }
@@ -177,9 +194,8 @@ body {
   }
 }
 
-/* Iridescent text */
 .iri-text {
-  background: linear-gradient(115deg, #6d7fd6, #c66fb0, #4fae86, #c79a3e, #6d5fd6);
+  background: linear-gradient(115deg, #5f72d6, #c765ad, #2fa579, #c2902f, #5f52d6);
   background-size: 220% 220%;
   -webkit-background-clip: text;
   background-clip: text;
@@ -191,19 +207,19 @@ body {
   }
 }
 
-/* A pearl orb — the hero object. Layered holographic radials, soft-lit. */
+/* Pearl orb — the hero object */
 .orb {
   border-radius: 9999px;
   background:
     radial-gradient(60% 55% at 32% 28%, #ffffff 0%, transparent 45%),
-    radial-gradient(50% 50% at 70% 30%, #cdd8ff 0%, transparent 55%),
-    radial-gradient(55% 55% at 72% 72%, #f7cfec 0%, transparent 55%),
-    radial-gradient(60% 60% at 30% 74%, #c9f2df 0%, transparent 55%),
-    radial-gradient(70% 70% at 50% 50%, #efe7d2 0%, #d9d3e6 100%);
+    radial-gradient(50% 50% at 70% 30%, #c7d4ff 0%, transparent 55%),
+    radial-gradient(55% 55% at 72% 72%, #f5cbec 0%, transparent 55%),
+    radial-gradient(60% 60% at 30% 74%, #c3f0dc 0%, transparent 55%),
+    radial-gradient(70% 70% at 50% 50%, #f0ebfa 0%, #d7d2ea 100%);
   box-shadow:
-    inset 0 6px 24px rgba(255, 255, 255, 0.7),
-    inset 0 -12px 40px rgba(14, 13, 12, 0.12),
-    0 40px 80px -30px rgba(14, 13, 12, 0.35);
+    inset 0 6px 26px rgba(255, 255, 255, 0.75),
+    inset 0 -14px 44px rgba(13, 13, 16, 0.12),
+    0 44px 90px -32px rgba(13, 13, 16, 0.36);
 }
 @media (prefers-reduced-motion: no-preference) {
   .orb {
@@ -220,15 +236,14 @@ body {
   }
 }
 
-/* Fine engraved grid + grain for large surfaces */
+/* Fine engraved grid */
 .bg-grid {
   background-image:
-    linear-gradient(rgba(14, 13, 12, 0.045) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(14, 13, 12, 0.045) 1px, transparent 1px);
+    linear-gradient(rgba(13, 13, 16, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(13, 13, 16, 0.04) 1px, transparent 1px);
   background-size: 64px 64px;
 }
 
-/* Encrypted value — blurred + redacted until revealed */
 .encrypted-blur {
   filter: blur(7px);
   user-select: none;
@@ -236,7 +251,36 @@ body {
 }
 
 /* ----------------------------------------------------------------------------
-   Motion (respects reduced-motion)
+   Scroll-reveal — elements fade/slide in as they enter the viewport
+   (driven by IntersectionObserver adding [data-shown] via <Reveal>)
+---------------------------------------------------------------------------- */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(22px);
+  filter: blur(6px);
+  transition:
+    opacity 0.7s var(--ease-out-soft),
+    transform 0.7s var(--ease-out-soft),
+    filter 0.7s var(--ease-out-soft);
+  transition-delay: var(--reveal-delay, 0ms);
+  will-change: opacity, transform;
+}
+[data-reveal][data-shown] {
+  opacity: 1;
+  transform: none;
+  filter: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal] {
+    opacity: 1;
+    transform: none;
+    filter: none;
+    transition: none;
+  }
+}
+
+/* ----------------------------------------------------------------------------
+   Motion
 ---------------------------------------------------------------------------- */
 @keyframes shimmer {
   100% {
@@ -270,7 +314,7 @@ body {
 
 @media (prefers-reduced-motion: no-preference) {
   .animate-fade-up {
-    animation: fade-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation: fade-up 0.7s var(--ease-out-soft) both;
   }
   .animate-reveal {
     animation: reveal-pop 0.45s var(--ease-out-soft) both;
@@ -284,7 +328,7 @@ body {
     position: absolute;
     inset: 0;
     transform: translateX(-100%);
-    background: linear-gradient(90deg, transparent, rgba(14, 13, 12, 0.06), transparent);
+    background: linear-gradient(90deg, transparent, rgba(13, 13, 16, 0.06), transparent);
     animation: shimmer 1.6s infinite;
   }
 }

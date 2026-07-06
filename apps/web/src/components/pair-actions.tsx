@@ -37,6 +37,7 @@ import {
 import { getFhevmInstance } from "@/lib/fhevm";
 import { DecryptBalance } from "@/components/decrypt-balance";
 import { UnwrapSteps } from "@/components/unwrap-steps";
+import { ConnectCard } from "@/components/connect-card";
 import { cn } from "@/components/ui/cn";
 import type { UiPair } from "@/lib/pair";
 
@@ -999,12 +1000,10 @@ export function PairActions({ pair, header }: { pair: UiPair; header?: ReactNode
     return (
       <div className="grid gap-5">
         {header}
-        <div className="flex items-center gap-3 rounded-2xl border border-hairline bg-surface p-5 text-sm text-zinc-400">
-          <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-accent-soft text-accent">
-            <Wallet className="h-4 w-4" />
-          </span>
-          Connect your wallet to use the faucet, wrap, unwrap, and send.
-        </div>
+        <ConnectCard title="Connect your wallet to use the faucet, wrap, unwrap, and send.">
+          All confidential actions run on Sepolia. Your balances stay encrypted — only you can
+          reveal them.
+        </ConnectCard>
       </div>
     );
   }

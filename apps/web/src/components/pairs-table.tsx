@@ -71,22 +71,22 @@ export function PairsTable({
   }, [pairs, query]);
 
   return (
-    <div className="overflow-hidden rounded-2xl border border-hairline bg-surface/30">
+    <div className="overflow-hidden rounded-2xl border border-hairline bg-surface shadow-soft">
       {/* Toolbar */}
-      <div className="flex items-center justify-between gap-3 border-b border-hairline px-4 py-3">
-        <div className="relative flex w-full max-w-sm items-center">
-          <Search className="pointer-events-none absolute left-0 h-4 w-4 text-zinc-600" />
+      <div className="flex items-center justify-between gap-3 border-b border-hairline p-3">
+        <div className="flex h-9 w-full max-w-sm items-center gap-2 rounded-full border border-hairline bg-surface-2 px-3.5 transition-colors focus-within:border-hairline-strong">
+          <Search className="pointer-events-none h-4 w-4 shrink-0 text-faint" />
           <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search by symbol, name, or address…"
             aria-label="Search pairs"
-            className="w-full bg-transparent pl-7 text-sm text-zinc-100 outline-none placeholder:text-zinc-600"
+            className="w-full bg-transparent text-sm text-ink outline-none placeholder:text-faint"
           />
         </div>
-        <span className="shrink-0 font-mono text-xs text-zinc-500">
+        <span className="shrink-0 pr-1 font-mono text-xs text-muted">
           {filtered.length}
-          <span className="text-zinc-600"> / {pairs.length}</span>
+          <span className="text-faint"> / {pairs.length}</span>
         </span>
       </div>
 

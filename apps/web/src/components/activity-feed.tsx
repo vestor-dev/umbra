@@ -14,6 +14,7 @@ import {
   RefreshCw,
 } from "lucide-react";
 import { TokenIcon } from "@/components/token-icon";
+import { ConnectCard } from "@/components/connect-card";
 import { cn } from "@/components/ui/cn";
 import type { ActivityItem, ActivityKind } from "@/app/api/activity/route";
 
@@ -107,9 +108,10 @@ export function ActivityFeed() {
 
   if (!isConnected) {
     return (
-      <div className="rounded-2xl border border-hairline bg-surface p-8 text-center text-sm text-zinc-400">
-        Connect your wallet to see your confidential activity.
-      </div>
+      <ConnectCard title="Connect your wallet to see your confidential activity.">
+        Umbra reconstructs your wraps, unwraps, sends, and receives from on-chain events — amounts
+        stay encrypted unless you reveal them.
+      </ConnectCard>
     );
   }
 

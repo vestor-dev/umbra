@@ -1,14 +1,13 @@
-import { createConfig, fallback, http } from "wagmi";
+import { createConfig } from "@privy-io/wagmi";
+import { fallback, http } from "wagmi";
 import { mainnet, sepolia } from "wagmi/chains";
 
 /**
- * Wallet connectors come from EIP-6963 multi-injected-provider discovery (default on in
- * wagmi v3) — MetaMask, Rabby, Coinbase, etc. announce themselves, so we avoid importing
- * the `wagmi/connectors` barrel (which pulls optional deps like `porto`).
+ * wagmi config for Privy. Privy manages the connectors (external EVM wallets +
+ * optional embedded), so we only declare chains + transports here.
  */
 export const wagmiConfig = createConfig({
   chains: [sepolia, mainnet],
-  multiInjectedProviderDiscovery: true,
   transports: {
     [sepolia.id]: fallback([
       http(process.env.NEXT_PUBLIC_SEPOLIA_RPC_URL),
