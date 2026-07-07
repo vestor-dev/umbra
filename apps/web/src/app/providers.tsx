@@ -7,7 +7,10 @@ import { WagmiProvider, useSetActiveWallet } from "@privy-io/wagmi";
 import { mainnet, sepolia } from "wagmi/chains";
 import { wagmiConfig } from "@/lib/wagmi";
 
-const PRIVY_APP_ID = process.env.NEXT_PUBLIC_PRIVY_APP_ID ?? "";
+// The Privy app id is a PUBLIC client id (it ships in the browser bundle), so a
+// hardcoded fallback is safe — and it keeps the build from failing when the env
+// var isn't set (CI, or a fresh Vercel project). Override it via env anytime.
+const PRIVY_APP_ID = process.env.NEXT_PUBLIC_PRIVY_APP_ID || "cmrb1gi9b000r0cjly6tupaz7";
 
 /**
  * Bridges Privy's connected wallet into wagmi. Without this, Privy can be

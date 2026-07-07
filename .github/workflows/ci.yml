@@ -30,8 +30,3 @@ jobs:
 
       - name: Build
         run: pnpm build
-        env:
-          # CI only compiles; a placeholder keeps the (client-only) Privy
-          # provider from erroring during static generation. Real id lives in
-          # the deployment env.
-          NEXT_PUBLIC_PRIVY_APP_ID: ci-build-placeholder
