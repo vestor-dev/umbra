@@ -18,14 +18,54 @@ const PRIVY_APP_ID = process.env.NEXT_PUBLIC_PRIVY_APP_ID || "cmrb1gi9b000r0cjly
  * every action gated on wagmi (wrap/unwrap/reveal) stays locked. We promote the
  * first external (non-embedded) wallet to wagmi's active wallet.
  */
+const dripInFlight = new Set<string>();
+
+/** Give a freshly-created embedded wallet a little Sepolia gas — once. */
+async function dripGas(address: string) {
+  const lower = address.toLowerCase();
+  const flag = `umbra.gas.${lower}`;
+  try {
+    if (localStorage.getItem(flag)) return;
+  } catch {
+    /* storage unavailable */
+  }
+  if (dripInFlight.has(lower)) return;
+  dripInFlight.add(lower);
+  try {
+    const res = await fetch("/api/gas", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ address }),
+    });
+    if (res.ok) {
+      try {
+        localStorage.setItem(flag, "1");
+      } catch {
+        /* ignore */
+      }
+    }
+  } catch {
+    /* network error — retry on next mount */
+  } finally {
+    dripInFlight.delete(lower);
+  }
+}
+
 function WalletBridge({ children }: { children: ReactNode }) {
   const { wallets } = useWallets();
   const { setActiveWallet } = useSetActiveWallet();
 
   useEffect(() => {
     if (!wallets.length) return;
-    const external = wallets.find((w) => w.walletClientType !== "privy") ?? wallets[0];
-    if (external) void setActiveWallet(external).catch(() => {});
+    const external = wallets.find((w) => w.walletClientType !== "privy");
+    const active = external ?? wallets[0];
+    if (active) void setActiveWallet(active).catch(() => {});
+
+    // Email/social user (embedded wallet, no external) → fund it with gas once.
+    if (!external) {
+      const embedded = wallets.find((w) => w.walletClientType === "privy");
+      if (embedded?.address) void dripGas(embedded.address);
+    }
   }, [wallets, setActiveWallet]);
 
   return <>{children}</>;
