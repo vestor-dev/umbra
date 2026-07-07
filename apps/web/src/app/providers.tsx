@@ -52,7 +52,9 @@ export function Providers({ children }: { children: ReactNode }) {
           logo: "/umbra-logo.svg",
         },
         loginMethods: ["wallet", "email"],
-        embeddedWallets: { ethereum: { createOnLogin: "off" } },
+        // Email/social users have no external wallet — give them an embedded
+        // Ethereum wallet so they get a real address to wrap/reveal/send with.
+        embeddedWallets: { ethereum: { createOnLogin: "users-without-wallets" } },
         defaultChain: sepolia,
         supportedChains: [sepolia, mainnet],
       }}

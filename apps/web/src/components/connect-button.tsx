@@ -116,39 +116,44 @@ export function ConnectButton() {
                 <Wallet className="h-6 w-6 text-white" />
               </span>
               <h2 className="font-display mt-4 text-lg text-ink">Your wallet</h2>
-              {addr && (
-                <p className="mx-auto mt-1 max-w-[16rem] break-all font-mono text-xs text-muted">
-                  {addr}
-                </p>
-              )}
 
-              <div className="mt-5 grid gap-2">
-                <button
-                  type="button"
-                  onClick={copyAddress}
-                  className="inline-flex h-10 items-center justify-center gap-2 rounded-lg border border-hairline bg-surface text-sm font-medium text-ink shadow-soft transition-colors hover:bg-surface-2"
-                >
-                  {copied ? (
-                    <>
-                      <Check className="h-4 w-4 text-success" /> Copied!
-                    </>
-                  ) : (
-                    <>
-                      <Copy className="h-4 w-4" /> Copy address
-                    </>
-                  )}
-                </button>
-                {addr && (
-                  <a
-                    href={`https://sepolia.etherscan.io/address/${addr}`}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex h-10 items-center justify-center gap-2 rounded-lg border border-hairline bg-surface text-sm font-medium text-ink shadow-soft transition-colors hover:bg-surface-2"
-                  >
-                    <ExternalLink className="h-4 w-4" /> View on Etherscan
-                  </a>
-                )}
-              </div>
+              {addr ? (
+                <>
+                  <p className="mx-auto mt-1 max-w-[16rem] break-all font-mono text-xs text-muted">
+                    {addr}
+                  </p>
+                  <div className="mt-5 grid gap-2">
+                    <button
+                      type="button"
+                      onClick={copyAddress}
+                      className="inline-flex h-10 items-center justify-center gap-2 rounded-lg border border-hairline bg-surface text-sm font-medium text-ink shadow-soft transition-colors hover:bg-surface-2"
+                    >
+                      {copied ? (
+                        <>
+                          <Check className="h-4 w-4 text-success" /> Copied!
+                        </>
+                      ) : (
+                        <>
+                          <Copy className="h-4 w-4" /> Copy address
+                        </>
+                      )}
+                    </button>
+                    <a
+                      href={`https://sepolia.etherscan.io/address/${addr}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex h-10 items-center justify-center gap-2 rounded-lg border border-hairline bg-surface text-sm font-medium text-ink shadow-soft transition-colors hover:bg-surface-2"
+                    >
+                      <ExternalLink className="h-4 w-4" /> View on Etherscan
+                    </a>
+                  </div>
+                </>
+              ) : (
+                <div className="mt-4 flex flex-col items-center gap-3 rounded-xl border border-hairline bg-surface-2 px-4 py-6">
+                  <Spinner size="md" />
+                  <p className="text-xs text-muted">Setting up your wallet…</p>
+                </div>
+              )}
 
               <div className="mt-4 flex gap-2 border-t border-hairline pt-4">
                 <Button variant="secondary" className="flex-1" onClick={() => setOpen(false)}>
