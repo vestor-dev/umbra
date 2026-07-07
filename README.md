@@ -17,7 +17,9 @@ your balance to no one but yourself — a full workstation for the
 [![Network](https://img.shields.io/badge/network-Sepolia_+_Ethereum-14875a?style=flat-square)](#-networks)
 [![License](https://img.shields.io/badge/license-MIT-0d0d10?style=flat-square)](./LICENSE)
 
-🌐 **Live demo:** _add after deploy_ · 🎬 **Video:** _add after recording_ · 🧵 **X thread:** _add after posting_
+### ▸ [**Launch the live app →**](https://umbra-web-nine.vercel.app)
+
+🎬 **Video:** _add after recording_ · 🧵 **X thread:** _add after posting_
 
 </div>
 
@@ -187,7 +189,7 @@ umbra/
 
 ```html
 <iframe
-  src="https://umbra.app/embed?token=0xYourWrapperAddress"
+  src="https://umbra-web-nine.vercel.app/embed?token=0xYourWrapperAddress"
   width="420" height="600" style="border:0;border-radius:16px"
 ></iframe>
 ```
