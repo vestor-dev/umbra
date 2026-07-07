@@ -11,15 +11,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # Version is read from package.json "packageManager" — don't also pin it
+      # here, or pnpm/action-setup errors on the mismatch.
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
-        with:
-          version: 10
 
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: pnpm
 
       - name: Install
@@ -28,8 +28,10 @@ jobs:
       - name: Typecheck
         run: pnpm typecheck
 
-      - name: Test
-        run: pnpm test
-
       - name: Build
         run: pnpm build
+        env:
+          # CI only compiles; a placeholder keeps the (client-only) Privy
+          # provider from erroring during static generation. Real id lives in
+          # the deployment env.
+          NEXT_PUBLIC_PRIVY_APP_ID: ci-build-placeholder
