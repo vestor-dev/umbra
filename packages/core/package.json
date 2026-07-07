@@ -23,10 +23,10 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/NueloSE/umbra.git",
+    "url": "git+https://github.com/vestor-dev/umbra.git",
     "directory": "packages/core"
   },
-  "homepage": "https://github.com/NueloSE/umbra/tree/main/packages/core#readme",
+  "homepage": "https://github.com/vestor-dev/umbra/tree/main/packages/core#readme",
   "scripts": {
     "build": "tsc -p tsconfig.build.json && node scripts/add-dist-extensions.mjs",
     "typecheck": "tsc --noEmit",
