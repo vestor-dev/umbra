@@ -46,6 +46,7 @@ export function Providers({ children }: { children: ReactNode }) {
           theme: "light",
           accentColor: "#0d0d10",
           walletChainType: "ethereum-only",
+          logo: "/umbra-logo.svg",
         },
         loginMethods: ["wallet", "email"],
         embeddedWallets: { ethereum: { createOnLogin: "off" } },
