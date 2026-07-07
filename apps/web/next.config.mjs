@@ -29,18 +29,11 @@ const nextConfig = {
     // Lint is run as its own CI step, not during builds.
     ignoreDuringBuilds: true,
   },
-  // The relayer SDK requires a cross-origin-isolated context for its threaded WASM.
-  async headers() {
-    return [
-      {
-        source: "/(.*)",
-        headers: [
-          { key: "Cross-Origin-Opener-Policy", value: "same-origin" },
-          { key: "Cross-Origin-Embedder-Policy", value: "credentialless" },
-        ],
-      },
-    ];
-  },
+  // NOTE: we intentionally do NOT set cross-origin-isolation (COOP/COEP) headers.
+  // They'd let the Zama relayer SDK run multi-threaded, but they also break Privy's
+  // embedded-wallet iframe (email/social login hangs on "Creating your wallet").
+  // The SDK's initSDK() gracefully falls back to single-threaded when isolation is
+  // absent, so decryption still works — a small speed cost to keep email onboarding.
   webpack: (config) => {
     // The /web relayer SDK ships WASM loaded as async modules.
     config.experiments = { ...config.experiments, asyncWebAssembly: true };
